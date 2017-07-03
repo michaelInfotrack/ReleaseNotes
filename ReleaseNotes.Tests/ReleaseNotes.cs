@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ReleaseNotesBusinessLogic;
 
 namespace ReleaseNotes.Tests
@@ -10,9 +9,9 @@ namespace ReleaseNotes.Tests
         [TestMethod]
         public void TestMethod1()
         {
-            var temp = new Service();
+            var service = new Service();
 
-            temp.SetJiraConnection();
+            var issueList = service.GetDailyReleaseIssues();
 
         }
     }

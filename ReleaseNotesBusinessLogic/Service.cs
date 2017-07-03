@@ -11,44 +11,34 @@ namespace ReleaseNotesBusinessLogic
 {
     public class Service
     {
-
-        string sampleRequestJson = @"{
-    'name': 'All Open Bugs',
-    'description': 'Lists all open bugs',
-    'jql': 'type = Bug and resolution is empty',
-    'favourite': true,
-    'favouritedCount': 0}";
-        private Jira _jiraConnection;
-
+        private Jira _jira;
+        private string _releaseLabelToday;
 
         public Service()
         {
-            SetJiraConnection();
+            // Pull crednetials from Config instead (later)
+            _jira = GetJiraConnection(@"https://infotrack.atlassian.net", "michael.lachlan@infotrack.com.au", "Password2");
+            _releaseLabelToday = GetDailyReleaseLabel();
         }
 
-        public void SetJiraConnection()
+        public Jira GetJiraConnection(string connectionPath, string username, string password)
         {
-            var jira = Jira.CreateRestClient("https://infotrack.atlassian.net", "michael.lachlan", "Password1");
-
-            var issues = from i in jira.Issues.Queryable
-                         orderby i.Created
-                         select i;
-
-
-           
-
+            return Jira.CreateRestClient(connectionPath, username, password);
         }
 
 
-
-
-        public string RunQueryRequest()
+        private string GetDailyReleaseLabel()
         {
+            return DateTime.Today.ToString("yyyMMdd");
+        }
 
 
-            return null;
+        public List<Issue> GetDailyReleaseIssues(string releaseLabel = "")
+        {
+            var label = string.IsNullOrEmpty(releaseLabel) ? _releaseLabelToday : releaseLabel;
+            var jqlQuery = string.Format("labels = {0} ", label);
 
-
+            return _jira.Issues.GetIsssuesFromJqlAsync(jqlQuery, 100, 0, new System.Threading.CancellationToken()).Result.ToList();
         }
 
     }

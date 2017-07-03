@@ -20,6 +20,8 @@ namespace ReleaseNotesBusinessLogic
             // Pull crednetials from Config instead (later)
             _jira = GetJiraConnection(@"https://infotrack.atlassian.net", "michael.lachlan@infotrack.com.au", "Password2");
             _releaseLabelToday = GetDailyReleaseLabel();
+
+            CreateIssuesHistory();
         }
 
         private Jira GetJiraConnection(string connectionPath, string username, string password)
@@ -32,18 +34,28 @@ namespace ReleaseNotesBusinessLogic
             return DateTime.Today.ToString("yyyMMdd");
         }
 
-        public IEnumerable<Issue> GetDailyReleaseIssues(string releaseLabel = "")
+        public List<Issue> GetDailyReleaseIssues(string releaseLabel = "")
         {
             var label = string.IsNullOrEmpty(releaseLabel) ? _releaseLabelToday : releaseLabel;
             var jqlQuery = string.Format("labels = {0} ", label);
 
-            return ExecuteJqlQuery(jqlQuery).OrderBy(i => i.Key.ToString());
+            return ExecuteJqlQuery(jqlQuery).OrderBy(i => i.Key.ToString()).ToList();
         }
 
-        private IEnumerable<Issue> ExecuteJqlQuery(string jqlQuery)
+
+        private void CreateIssuesHistory()
+        {
+            var automation = new WordDocumentAutomation();           
+
+            automation.AddToHistoryIssues(null, @"D:\Git\ReleaseNotes\ReleaseNotes.docx", @"D:\Git\ReleaseNotes\test.pdf", GetDailyReleaseIssues());
+
+        }
+
+
+        private List<Issue> ExecuteJqlQuery(string jqlQuery)
         {
 
-            return _jira.Issues.GetIsssuesFromJqlAsync(jqlQuery, 100, 0, new System.Threading.CancellationToken()).Result.AsEnumerable();
+            return _jira.Issues.GetIsssuesFromJqlAsync(jqlQuery, 100, 0, new System.Threading.CancellationToken()).Result.ToList();
         }
 
 

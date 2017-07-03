@@ -39,6 +39,11 @@
 
         <input type="submit" value="Get Release" class="btn btn-primary" />
     }
+    
+    @using (Html.BeginForm("GenerateEmail", "Home", FormMethod.Post))
+    {
+        <input type="submit" value="Generate Email" class="form-control" />
+    }
 
 
 </div>

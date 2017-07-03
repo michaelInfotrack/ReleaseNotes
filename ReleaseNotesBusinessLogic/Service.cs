@@ -43,6 +43,7 @@ namespace ReleaseNotesBusinessLogic
             return _jira.Issues.GetIsssuesFromJqlAsync(jqlQuery, 100, 0, new System.Threading.CancellationToken()).Result.ToList();
         }
 
+
         private void CreateIssuesHistory()
         {
             var automation = new WordDocumentAutomation();           
@@ -51,5 +52,10 @@ namespace ReleaseNotesBusinessLogic
 
         }
 
+
+        public object GetFormattedReleaseLabelFromDate()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

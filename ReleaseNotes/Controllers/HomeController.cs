@@ -2,16 +2,23 @@
 using System.Web.Mvc;
 using ReleaseNotes.Models;
 using Outlook = Microsoft.Office.Interop.Outlook;
-using ReleaseNotesBusinessLogic;
+using Service = ReleaseNotesBusinessLogic.Service;
+using Atlassian.Jira;
 
 namespace ReleaseNotes.Controllers
 {
     public class HomeController : Controller
     {
+        private Service _service;
+
+        public HomeController()
+        {
+            _service = new Service();
+        }
+
         public ActionResult Index()
         {
-            var service = new Service();
-            var results = service.GetDailyReleaseIssues();
+            var results = _service.GetDailyReleaseIssues();
             var model = new ResultsModel { JiraIssues = results };
             return View(model);
         }
@@ -30,40 +37,350 @@ namespace ReleaseNotes.Controllers
             return View();
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Contact(EmailFormModel model)
+        [HttpGet]
+        public ActionResult GetByDate(string releaseLabel)
         {
-            Outlook.Application _objApp;
-            Outlook.MailItem _objMail;
+            var result = _service.GetDailyReleaseIssues(releaseLabel);
+            var model = new ResultsModel { JiraIssues = result };
 
-            if (ModelState.IsValid)
-            {
-                _objApp = new Outlook.Application();
-                _objMail = (Outlook.MailItem)_objApp.CreateItem(Outlook.OlItemType.olMailItem);
-                _objMail.To = "test@infotrack.com.au"; //Replace with InfotrackDevelopmentNotifications@infotrack.com.au
-                _objMail.Subject = "Release Notes - " + model.ReleaseTitle;
-
-                _objMail.Body = GetEmailBody(model);
-                _objMail.Display(true);
-            }
-            return View(model);
+            return View("Index", model);
         }
 
-        private string GetEmailBody(EmailFormModel model)
+        private string GetEmailBody(ResultsModel model)
         {
             try
             {
-                //Add the release notes here
-                string emailBody = model.ReleaseNotes;
+                #region Variables
+                string body = string.Empty;
+                var newLine = "<br />";
+                body += "Releases for: " + DateTime.Today.ToShortDateString() + newLine + newLine; //This should probably be the releaseLabel
 
-                return emailBody;
+                bool dmtHeadingAdded = false;
+                bool globalHeadingAdded = false;
+                bool voiHeadingAdded = false;
+                bool iMajorHeadingAdded = false;
+                bool infotrackUkHeadingAdded = false;
+                bool internalHeadingAdded = false;
+                bool labsHeadingAdded = false;
+                bool mapItHeadingAdded = false;
+                bool mapleHeadingAdded = false;
+                bool pencilHeadingAdded = false;
+                bool pexaHeadingAdded = false;
+                bool planItHeadingAdded = false;
+                bool revealHeadingAdded = false;
+                bool settleItHeadingAdded = false;
+                bool signItHeadingAdded = false;
+                bool testHeadingAdded = false;
+                bool trackItHeadingAdded = false;
+                bool usListHeadingAdded = false;
+                bool usPlatformHeadingAdded = false;
+                bool webHeadingAdded = false;
+                bool weCareHeadingAdded = false;
+                bool otherHeadingAdded = false;
+                #endregion
+
+                //Add the release notes here
+                foreach (var item in model.JiraIssues)
+                {
+                    switch (item.Project)
+                    {
+                        #region Projects
+                        case "DMT":
+                            if (!dmtHeadingAdded)
+                            {
+                                body += AddHeading("Project: Development Management Team");
+                                dmtHeadingAdded = true;
+                            }
+
+                            body += AddItemToBody(body, item);
+
+                            break;
+
+                        case "GLOB":
+                            if (!globalHeadingAdded)
+                            {
+                                body += AddHeading("Project: Global Platform");
+                                globalHeadingAdded = true;
+                            }
+
+                            body += AddItemToBody(body, item);
+
+                            break;
+
+                        case "VOI":
+                            if (!voiHeadingAdded)
+                            {
+                                body += AddHeading("Project: VOI");
+                                voiHeadingAdded = true;
+                            }
+
+                            body += AddItemToBody(body, item);
+
+                            break;
+
+                        case "IMAJOR":
+                            if (!iMajorHeadingAdded)
+                            {
+                                body += AddHeading("Project: iMajor");
+                                iMajorHeadingAdded = true;
+                            }
+
+                            body += AddItemToBody(body, item);
+
+                            break;
+
+                        case "UK":
+                            if (!infotrackUkHeadingAdded)
+                            {
+                                body += AddHeading("Project: Infotrack UK");
+                                infotrackUkHeadingAdded = true;
+                            }
+
+                            body += AddItemToBody(body, item);
+
+                            break;
+
+                        case "IN":
+                            if (!internalHeadingAdded)
+                            {
+                                body += AddHeading("Project: Internal");
+                                internalHeadingAdded = true;
+                            }
+
+                            body += AddItemToBody(body, item);
+
+                            break;
+
+                        case "LABS":
+                            if (!labsHeadingAdded)
+                            {
+                                body += AddHeading("Project: LABS");
+                                labsHeadingAdded = true;
+                            }
+
+                            body += AddItemToBody(body, item);
+
+                            break;
+
+                        case "MAPIT":
+                            if (!mapItHeadingAdded)
+                            {
+                                body += AddHeading("Project: MapIT");
+                                mapItHeadingAdded = true;
+                            }
+
+                            body += AddItemToBody(body, item);
+
+                            break;
+
+                        case "MAP":
+                            if (!mapleHeadingAdded)
+                            {
+                                body += AddHeading("Project: Maple");
+                                mapleHeadingAdded = true;
+                            }
+
+                            body += AddItemToBody(body, item);
+
+                            break;
+
+                        case "PEN":
+                            if (!pencilHeadingAdded)
+                            {
+                                body += AddHeading("Project: Pencil");
+                                pencilHeadingAdded = true;
+                            }
+
+                            body += AddItemToBody(body, item);
+
+                            break;
+
+                        case "PEXA":
+                            if (!pexaHeadingAdded)
+                            {
+                                body += AddHeading("Project: Pexa");
+                                pexaHeadingAdded = true;
+                            }
+
+                            body += AddItemToBody(body, item);
+
+                            break;
+
+                        case "PLN":
+                            if (!planItHeadingAdded)
+                            {
+                                body += AddHeading("Project: PlanIT");
+                                planItHeadingAdded = true;
+                            }
+
+                            body += AddItemToBody(body, item);
+
+                            break;
+
+                        case "REV":
+                            if (!revealHeadingAdded)
+                            {
+                                body += AddHeading("Project: Reveal");
+                                revealHeadingAdded = true;
+                            }
+
+                            body += AddItemToBody(body, item);
+
+                            break;
+
+                        case "SC":
+                            if (!settleItHeadingAdded)
+                            {
+                                body += AddHeading("Project: SettleIT");
+                                settleItHeadingAdded = true;
+                            }
+
+                            body += AddItemToBody(body, item);
+
+                            break;
+
+                        case "SIG":
+                            if (!signItHeadingAdded)
+                            {
+                                body += AddHeading("Project: SignIT");
+                                signItHeadingAdded = true;
+                            }
+
+                            body += AddItemToBody(body, item);
+
+                            break;
+
+                        case "TEST":
+                            if (!testHeadingAdded)
+                            {
+                                body += AddHeading("Project: Test");
+                                testHeadingAdded = true;
+                            }
+
+                            body += AddItemToBody(body, item);
+
+                            break;
+
+                        case "TIT":
+                            if (!trackItHeadingAdded)
+                            {
+                                body += AddHeading("Project: TrackIT");
+                                trackItHeadingAdded = true;
+                            }
+
+                            body += AddItemToBody(body, item);
+
+                            break;
+
+                        case "UL":
+                            if (!usListHeadingAdded)
+                            {
+                                body += AddHeading("Project: US - The List");
+                                usListHeadingAdded = true;
+                            }
+
+                            body += AddItemToBody(body, item);
+
+                            break;
+
+                        case "USP":
+                            if (!usPlatformHeadingAdded)
+                            {
+                                body += AddHeading("Project: US Platform");
+                                usPlatformHeadingAdded = true;
+                            }
+
+                            body += AddItemToBody(body, item);
+
+                            break;
+
+                        case "WEB":
+                            if (!webHeadingAdded)
+                            {
+                                body += AddHeading("Project: Website");
+                                webHeadingAdded = true;
+                            }
+
+                            body += AddItemToBody(body, item);
+
+                            break;
+
+                        case "CAR":
+                            if (!weCareHeadingAdded)
+                            {
+                                body += AddHeading("Project: We Care");
+                                weCareHeadingAdded = true;
+                            }
+
+                            body += AddItemToBody(body, item);
+
+                            break;
+
+                        default:
+                            if (!otherHeadingAdded)
+                            {
+                                body += AddHeading("Project: Other");
+                                otherHeadingAdded = true;
+                            }
+                            body += AddItemToBody(body, item);
+
+                            break;
+#endregion
+                    }
+                }
+
+                return body;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
                 throw;
             }
+        }
+
+        private static string AddItemToBody(string body, Issue item)
+        {
+            var newLine = "<br />";
+            body += item.Key.Value + " - " + item.Summary + newLine;
+            return body;
+        }
+
+        private static string AddHeading(string heading)
+        {
+            var newLine = "<br />";
+            return "<b>" + heading + "</b>" + newLine;
+        }
+
+        [HttpPost]
+        public ActionResult GenerateEmail()
+        {
+            var result = _service.GetDailyReleaseIssues();
+            var model = new ResultsModel { JiraIssues = result };
+
+            Outlook.Application _objApp;
+            Outlook.MailItem _objMail = null;
+
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    _objApp = new Outlook.Application();
+                    _objMail = (Outlook.MailItem)_objApp.CreateItem(Outlook.OlItemType.olMailItem);
+                    _objMail.To = "test@infotrack.com.au"; //Replace with InfotrackDevelopmentNotifications@infotrack.com.au from appSettings
+                    _objMail.Subject = "Release Notes - ";
+
+                    _objMail.HTMLBody = GetEmailBody(model);
+                    _objMail.Display(true);
+                }
+            }
+            catch (Exception e)
+            {
+                ModelState.AddModelError("Email", "An error occurred trying to open the email client.");
+            }
+
+            _objMail?.Close(Outlook.OlInspectorClose.olDiscard);
+
+            return View("Index", model);
         }
     }
 }

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Atlassian;
 using Atlassian.Jira;
+using Atlassian.Jira.Linq;
 using Newtonsoft.Json;
 
 namespace ReleaseNotesBusinessLogic
@@ -28,19 +29,17 @@ namespace ReleaseNotesBusinessLogic
             return Jira.CreateRestClient(connectionPath, username, password);
         }
 
-
         private string GetDailyReleaseLabel()
         {
             return DateTime.Today.ToString("yyyMMdd");
         }
-
 
         public List<Issue> GetDailyReleaseIssues(string releaseLabel = "")
         {
             var label = string.IsNullOrEmpty(releaseLabel) ? _releaseLabelToday : releaseLabel;
             var jqlQuery = string.Format("labels = {0} ", label);
 
-            return _jira.Issues.GetIsssuesFromJqlAsync(jqlQuery, 100, 0, new System.Threading.CancellationToken()).Result.ToList();
+            return ExecuteJqlQuery(jqlQuery).OrderBy(i => i.Key.ToString()).ToList();
         }
 
 
@@ -53,9 +52,12 @@ namespace ReleaseNotesBusinessLogic
         }
 
 
-        public object GetFormattedReleaseLabelFromDate()
+        private List<Issue> ExecuteJqlQuery(string jqlQuery)
         {
-            throw new NotImplementedException();
+
+            return _jira.Issues.GetIsssuesFromJqlAsync(jqlQuery, 100, 0, new System.Threading.CancellationToken()).Result.ToList();
         }
+
+
     }
 }

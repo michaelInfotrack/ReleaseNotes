@@ -355,6 +355,8 @@ namespace ReleaseNotes.Controllers
         [HttpPost]
         public ActionResult GenerateEmail()
         {
+            _service.CreateIssuesHistory();
+
             var result = _service.GetDailyReleaseIssues();
             var model = new ResultsModel { JiraIssues = result };
 

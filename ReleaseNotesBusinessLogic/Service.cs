@@ -20,8 +20,6 @@ namespace ReleaseNotesBusinessLogic
             // Pull crednetials from Config instead (later)
             _jira = GetJiraConnection(@"https://infotrack.atlassian.net", "michael.lachlan@infotrack.com.au", "Password2");
             _releaseLabelToday = GetDailyReleaseLabel();
-
-            CreateIssuesHistory();
         }
 
         private Jira GetJiraConnection(string connectionPath, string username, string password)
@@ -43,7 +41,7 @@ namespace ReleaseNotesBusinessLogic
         }
 
 
-        private void CreateIssuesHistory()
+        public void CreateIssuesHistory()
         {
             var automation = new WordDocumentAutomation();           
 

@@ -6,7 +6,7 @@
 
 <div class="jumbotron">
 
-
+    <h1>Releases</h1>
 
 </div>
 
@@ -32,12 +32,12 @@
 
     </table>
     <br />
-    E.g.: 20170529
+    E.g.: 20170525
     @using (Html.BeginForm("GetByDate", "Home", FormMethod.Get))
     {
         @Html.TextBox("releaseLabel", null, new { @class = "form-control" });
 
-        <input type="submit" value="Get Release" class="form-control" />
+        <input type="submit" value="Get Release" class="btn btn-primary" />
     }
     
     @using (Html.BeginForm("GenerateEmail", "Home", FormMethod.Post))

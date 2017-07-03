@@ -11,7 +11,8 @@ namespace ReleaseNotes.Tests
         {
             var service = new Service();
 
-            var issueList = service.GetDailyReleaseIssues();
+
+            var results = service.GetDailyReleaseIssues("20170529");
 
         }
     }

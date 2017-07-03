@@ -12,7 +12,7 @@ namespace ReleaseNotesBusinessLogic
     public class WordDocumentAutomation
     {
 
-        public void AddToHistoryIssues(XElement documentData, string inputFilePath, string outputFilePath, List<Issue> issues)
+        public void AddToHistoryIssues(string inputFilePath, string outputFilePath, List<Issue> issues, string label, bool isLabelDate)
         {
             //Create new word object
             Microsoft.Office.Interop.Word.Application word = WordApplicationHelpers.CreateNewWordInstance();
@@ -20,7 +20,8 @@ namespace ReleaseNotesBusinessLogic
             // process the file
             using (WordDocument wordDocWrapper = new WordDocument(word, inputFilePath))
             {
-                if (wordDocWrapper.AddTagIssues(issues, DateTime.Today.AddDays(-1).ToLongDateString()))
+                //Only save the word document if the label is a date
+                if (wordDocWrapper.AddTagIssues(issues, label, isLabelDate) && isLabelDate)
                 {
                     wordDocWrapper.SaveAs(inputFilePath, WdSaveFormat.wdFormatDocumentDefault);                    
                 }

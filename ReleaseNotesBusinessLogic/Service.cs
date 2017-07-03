@@ -7,6 +7,7 @@ using Atlassian;
 using Atlassian.Jira;
 using Atlassian.Jira.Linq;
 using Newtonsoft.Json;
+using System.Globalization;
 
 namespace ReleaseNotesBusinessLogic
 {
@@ -41,12 +42,35 @@ namespace ReleaseNotesBusinessLogic
         }
 
 
-        public void CreateIssuesHistory()
+        public string CreateIssuesHistory(string label)
         {
-            var automation = new WordDocumentAutomation();           
+            var automation = new WordDocumentAutomation();
+            var doclabel = label;
+            DateTime date;
+            bool isLabelDate = IsLabelDate(label, out date);
 
-            automation.AddToHistoryIssues(null, @"\\syd-schfile01-t\Images\ReleaseNotes\ReleaseNotes.docx",String.Format(@"\\syd-schfile01-t\Images\ReleaseNotes\ReleaseNotes_{0}.pdf", DateTime.Today.ToString("yyyy-MM-dd") ), GetDailyReleaseIssues());
+            string outputPath = String.Format(@"\\syd-schfile01-t\Images\ReleaseNotes\ReleaseNotes_{0}.pdf", DateTime.Today.ToString("yyyy-MM-dd"));
+            var inputPath = @"\\syd-schfile01-t\Images\ReleaseNotes\ReleaseNotes.docx";
 
+            if (!isLabelDate)
+            {
+                outputPath = String.Format(@"\\syd-schfile01-t\Images\ReleaseNotes\ReleaseNotes_{0}_{1}.pdf", label, DateTime.Today.ToString("yyyy-MM-dd"));
+                inputPath = @"\\syd-schfile01-t\Images\ReleaseNotes\ReleaseNotes_empty.docx";
+            }
+            else doclabel = date.ToLongDateString();
+
+            automation.AddToHistoryIssues(inputPath, outputPath, GetDailyReleaseIssues(label), doclabel, isLabelDate);
+
+            return outputPath;
+        }
+
+        private bool IsLabelDate(string label, out DateTime date)
+        {
+            return DateTime.TryParseExact(label,
+                       "yyyyMMdd",
+                       CultureInfo.InvariantCulture,
+                       DateTimeStyles.None,
+                       out date);
         }
 
 

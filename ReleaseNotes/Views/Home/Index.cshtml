@@ -10,40 +10,51 @@
 
 </div>
 
-<div class="row">
-    <table class="table table-striped table-hover">
-        <thead>
-            <tr>
-                <td>Jira Id</td>
-                <td>Assignee</td>
-                <td>Summary</td>
-                <td>Status</td>
-            </tr>
-        </thead>
-        @foreach (var x in Model.JiraIssues)
+
+    @foreach (var item in Model.JiraIssues.GroupBy(x => x.Project).ToList())
+    {
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr  style="background-color:black">
+                    <td colspan="4" style="text-align:center; color:white; font-weight:bold">@item.FirstOrDefault().Project</td>
+                </tr>
+                <tr style="color:white; font-weight:bold">
+                    <td>Jira Id</td>
+                    <td>Assignee</td>
+                    <td>Summary</td>
+                    <td>Status</td>
+                </tr>
+            </thead>
+            @foreach (var issue in item)
+            {
+                <tr>
+                    <td><a target="_blank" href="https://infotrack.atlassian.net/browse/@issue.Key">@issue.Key</a></td>
+                    <td>@issue.Assignee</td>
+                    <td>@issue.Summary</td>
+                    <td>@issue.Status</td>
+                </tr>
+            }
+        </table>
+        <br />
+    }
+
+
+
+    <div class="row">
+
+        <br />
+        E.g.: 20170525
+        @using (Html.BeginForm("GetByDate", "Home", FormMethod.Get))
         {
-            <tr>
-                <td>@x.Key</td>
-                <td>@x.Assignee</td>
-                <td>@x.Summary</td>
-                <td>@x.Status</td>
-            </tr>
+            @Html.TextBox("releaseLabel", null, new { @class = "form-control" });
+
+            <input type="submit" value="Get Release" class="btn btn-primary" />
         }
 
-    </table>
-    <br />
-    E.g.: 20170525
-    @using (Html.BeginForm("GetByDate", "Home", FormMethod.Get))
-    {
-        @Html.TextBox("releaseLabel", null, new { @class = "form-control" });
-
-        <input type="submit" value="Get Release" class="btn btn-primary" />
-    }
-    
-    @using (Html.BeginForm("GenerateEmail", "Home", FormMethod.Post))
-    {
-        <input type="submit" value="Generate Email" class="form-control" />
-    }
+        @using (Html.BeginForm("GenerateEmail", "Home", FormMethod.Post))
+        {
+            <input type="submit" value="Generate Email" class="form-control" />
+        }
 
 
-</div>
+    </div>

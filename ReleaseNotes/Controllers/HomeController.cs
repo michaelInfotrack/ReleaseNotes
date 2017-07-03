@@ -344,7 +344,8 @@ namespace ReleaseNotes.Controllers
         private static string AddItemToBody(string body, Issue item)
         {
             var newLine = "<br />";
-            body += item.Key.Value + " - " + item.Summary + newLine;
+            var url = "https://infotrack.atlassian.net/browse/";
+            body += string.Format("<a href='{0}'>"+ item.Key.Value + "</a>", url + item.Key.Value) + " - " + item.Summary + newLine;
             return body;
         }
 
@@ -357,6 +358,8 @@ namespace ReleaseNotes.Controllers
         [HttpPost]
         public ActionResult GenerateEmail()
         {
+            _service.CreateIssuesHistory();
+
             var result = _service.GetDailyReleaseIssues();
             var model = new ResultsModel { JiraIssues = result };
 

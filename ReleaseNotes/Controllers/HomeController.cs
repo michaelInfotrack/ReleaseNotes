@@ -8,10 +8,16 @@ namespace ReleaseNotes.Controllers
 {
     public class HomeController : Controller
     {
+        private Service _service;
+
+        public HomeController()
+        {
+            _service = new Service();
+        }
+
         public ActionResult Index()
         {
-            var service = new Service();
-            var results = service.GetDailyReleaseIssues();
+            var results = _service.GetDailyReleaseIssues();
             var model = new ResultsModel { JiraIssues = results };
             return View(model);
         }
@@ -28,6 +34,15 @@ namespace ReleaseNotes.Controllers
             ViewBag.Message = "Your contact page.";
 
             return View();
+        }
+
+        [HttpGet]
+        public ActionResult GetByDate(string releaseLabel)
+        {
+            var result = _service.GetDailyReleaseIssues(releaseLabel);
+            var model = new ResultsModel { JiraIssues = result };
+
+            return View("Index", model);
         }
 
         [HttpPost]

@@ -41,5 +41,9 @@ namespace ReleaseNotesBusinessLogic
             return _jira.Issues.GetIsssuesFromJqlAsync(jqlQuery, 100, 0, new System.Threading.CancellationToken()).Result.ToList();
         }
 
+        public object GetFormattedReleaseLabelFromDate()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

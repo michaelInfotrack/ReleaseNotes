@@ -19,6 +19,8 @@ namespace ReleaseNotesBusinessLogic
             // Pull crednetials from Config instead (later)
             _jira = GetJiraConnection(@"https://infotrack.atlassian.net", "michael.lachlan@infotrack.com.au", "Password2");
             _releaseLabelToday = GetDailyReleaseLabel();
+
+            CreateIssuesHistory();
         }
 
         private Jira GetJiraConnection(string connectionPath, string username, string password)
@@ -39,6 +41,14 @@ namespace ReleaseNotesBusinessLogic
             var jqlQuery = string.Format("labels = {0} ", label);
 
             return _jira.Issues.GetIsssuesFromJqlAsync(jqlQuery, 100, 0, new System.Threading.CancellationToken()).Result.ToList();
+        }
+
+        private void CreateIssuesHistory()
+        {
+            var automation = new WordDocumentAutomation();           
+
+            automation.AddToHistoryIssues(null, @"D:\Git\ReleaseNotes\ReleaseNotes.docx", @"D:\Git\ReleaseNotes\test.pdf", GetDailyReleaseIssues());
+
         }
 
     }

@@ -58,5 +58,25 @@ namespace ReleaseNotes.Models
             [Description("Other")]
             Default
         }
+
+
+        public string GetEnumDescription(string project)
+        {
+            var temp = (ProjectTypes)System.Enum.Parse(typeof(ProjectTypes), project);
+
+            var type = temp.GetType();
+            var memberInfo = type.GetMember(temp.ToString());
+            if (memberInfo.Length > 0)
+            {
+                var attrs = memberInfo[0].GetCustomAttributes(typeof(DescriptionAttribute), false);
+
+                if (attrs.Length > 0)
+                {
+                    return ((DescriptionAttribute)attrs[0]).Description;
+                }
+            }
+            return temp.ToString();
+
+        }
     }
 }

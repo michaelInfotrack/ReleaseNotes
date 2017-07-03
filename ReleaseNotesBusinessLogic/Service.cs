@@ -37,7 +37,7 @@ namespace ReleaseNotesBusinessLogic
             var label = string.IsNullOrEmpty(releaseLabel) ? _releaseLabelToday : releaseLabel;
             var jqlQuery = string.Format("labels = {0} ", label);
 
-            return ExecuteJqlQuery(jqlQuery).OrderBy(i => i.Key.ToString()).ToList();
+            return ExecuteJqlQuery(jqlQuery).OrderBy(i => i.Key.ToString()).ThenBy(i => i.Assignee.ToString()).ToList();
         }
 
 

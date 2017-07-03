@@ -6,6 +6,12 @@
     <title>@ViewBag.Title - My ASP.NET Application</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    @Styles.Render("~/Content/themes/base/jquery-ui.min.css")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/Scripts/jquery-1.12.4.min.js")
+    @Scripts.Render("~/Scripts/jquery-ui-1.12.1.min.js")
+
+
 
 </head>
 <body>
@@ -37,8 +43,17 @@
         </footer>
     </div>
 
-    @Scripts.Render("~/bundles/jquery")
+    
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
+
+    <script type='text/javascript'>
+        $(function(){
+            $('.date-picker').datepicker(
+                {
+                    dateFormat: 'yymmdd'
+                });
+        })
+    </script>
 </body>
 </html>

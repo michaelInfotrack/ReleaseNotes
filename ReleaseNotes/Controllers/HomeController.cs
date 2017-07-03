@@ -40,19 +40,18 @@ namespace ReleaseNotes.Controllers
                 _objMail.To = "test@infotrack.com.au"; //Replace with InfotrackDevelopmentNotifications@infotrack.com.au
                 _objMail.Subject = "Release Notes - " + model.ReleaseTitle;
 
-                _objMail.Body = GetEmailBody();
+                _objMail.Body = GetEmailBody(model);
                 _objMail.Display(true);
             }
             return View(model);
         }
 
-        private string GetEmailBody()
+        private string GetEmailBody(EmailFormModel model)
         {
             try
             {
-                string emailBody = string.Empty;
-
                 //Add the release notes here
+                string emailBody = model.ReleaseNotes;
 
                 return emailBody;
             }

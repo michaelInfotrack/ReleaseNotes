@@ -74,13 +74,13 @@ namespace ReleaseNotesBusinessLogic
                         table.Rows[list.IndexOf(item) + 1].Cells[i].Range.Font.Size = 10;
                         table.Rows[list.IndexOf(item) + 1].Cells[i].Range.Font.Name = "Arial";
                     }
-                    table.Rows[list.IndexOf(item) + 1].Cells[1].Range.Text = item.Key.Value;
-                    table.Rows[list.IndexOf(item) + 1].Cells[2].Range.Text = item.Summary;
+
+                    object address = @"https://infotrack.atlassian.net/browse/" + item.Key;
+                    _wordDoc.Hyperlinks.Add(table.Rows[list.IndexOf(item) + 1].Cells[1].Range, ref address, ref oMissing, ref oMissing, item.Key.Value, ref oMissing);
+                    table.Rows[list.IndexOf(item) + 1].Cells[2].Range.Text = item.Summary;                                     
                     table.Rows[list.IndexOf(item) + 1].Cells[3].Range.Text = item.Assignee;
                 }
-
-            }          
-
+            }
         }       
 
 

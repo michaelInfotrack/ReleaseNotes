@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Web.Mvc;
+using System.Web.Services.Description;
 using ReleaseNotes.Models;
 using Outlook = Microsoft.Office.Interop.Outlook;
 using Service = ReleaseNotesBusinessLogic.Service;
+using System.Linq;
 using Atlassian.Jira;
+using ReleaseNotesBusinessLogic;
 
 namespace ReleaseNotes.Controllers
 {
@@ -92,7 +95,7 @@ namespace ReleaseNotes.Controllers
                                 dmtHeadingAdded = true;
                             }
 
-                            body += AddItemToBody(body, item);
+                            body = AddItemToBody(body, item);
 
                             break;
 
@@ -103,7 +106,7 @@ namespace ReleaseNotes.Controllers
                                 globalHeadingAdded = true;
                             }
 
-                            body += AddItemToBody(body, item);
+                            body = AddItemToBody(body, item);
 
                             break;
 
@@ -114,7 +117,7 @@ namespace ReleaseNotes.Controllers
                                 voiHeadingAdded = true;
                             }
 
-                            body += AddItemToBody(body, item);
+                            body = AddItemToBody(body, item);
 
                             break;
 
@@ -125,7 +128,7 @@ namespace ReleaseNotes.Controllers
                                 iMajorHeadingAdded = true;
                             }
 
-                            body += AddItemToBody(body, item);
+                            body = AddItemToBody(body, item);
 
                             break;
 
@@ -136,7 +139,7 @@ namespace ReleaseNotes.Controllers
                                 infotrackUkHeadingAdded = true;
                             }
 
-                            body += AddItemToBody(body, item);
+                            body = AddItemToBody(body, item);
 
                             break;
 
@@ -147,7 +150,7 @@ namespace ReleaseNotes.Controllers
                                 internalHeadingAdded = true;
                             }
 
-                            body += AddItemToBody(body, item);
+                            body = AddItemToBody(body, item);
 
                             break;
 
@@ -158,7 +161,7 @@ namespace ReleaseNotes.Controllers
                                 labsHeadingAdded = true;
                             }
 
-                            body += AddItemToBody(body, item);
+                            body = AddItemToBody(body, item);
 
                             break;
 
@@ -169,7 +172,7 @@ namespace ReleaseNotes.Controllers
                                 mapItHeadingAdded = true;
                             }
 
-                            body += AddItemToBody(body, item);
+                            body = AddItemToBody(body, item);
 
                             break;
 
@@ -180,7 +183,7 @@ namespace ReleaseNotes.Controllers
                                 mapleHeadingAdded = true;
                             }
 
-                            body += AddItemToBody(body, item);
+                            body = AddItemToBody(body, item);
 
                             break;
 
@@ -191,7 +194,7 @@ namespace ReleaseNotes.Controllers
                                 pencilHeadingAdded = true;
                             }
 
-                            body += AddItemToBody(body, item);
+                            body = AddItemToBody(body, item);
 
                             break;
 
@@ -202,7 +205,7 @@ namespace ReleaseNotes.Controllers
                                 pexaHeadingAdded = true;
                             }
 
-                            body += AddItemToBody(body, item);
+                            body = AddItemToBody(body, item);
 
                             break;
 
@@ -213,7 +216,7 @@ namespace ReleaseNotes.Controllers
                                 planItHeadingAdded = true;
                             }
 
-                            body += AddItemToBody(body, item);
+                            body = AddItemToBody(body, item);
 
                             break;
 
@@ -224,7 +227,7 @@ namespace ReleaseNotes.Controllers
                                 revealHeadingAdded = true;
                             }
 
-                            body += AddItemToBody(body, item);
+                            body = AddItemToBody(body, item);
 
                             break;
 
@@ -235,7 +238,7 @@ namespace ReleaseNotes.Controllers
                                 settleItHeadingAdded = true;
                             }
 
-                            body += AddItemToBody(body, item);
+                            body = AddItemToBody(body, item);
 
                             break;
 
@@ -246,7 +249,7 @@ namespace ReleaseNotes.Controllers
                                 signItHeadingAdded = true;
                             }
 
-                            body += AddItemToBody(body, item);
+                            body = AddItemToBody(body, item);
 
                             break;
 
@@ -257,7 +260,7 @@ namespace ReleaseNotes.Controllers
                                 testHeadingAdded = true;
                             }
 
-                            body += AddItemToBody(body, item);
+                            body = AddItemToBody(body, item);
 
                             break;
 
@@ -268,7 +271,7 @@ namespace ReleaseNotes.Controllers
                                 trackItHeadingAdded = true;
                             }
 
-                            body += AddItemToBody(body, item);
+                            body = AddItemToBody(body, item);
 
                             break;
 
@@ -279,7 +282,7 @@ namespace ReleaseNotes.Controllers
                                 usListHeadingAdded = true;
                             }
 
-                            body += AddItemToBody(body, item);
+                            body = AddItemToBody(body, item);
 
                             break;
 
@@ -290,7 +293,7 @@ namespace ReleaseNotes.Controllers
                                 usPlatformHeadingAdded = true;
                             }
 
-                            body += AddItemToBody(body, item);
+                            body = AddItemToBody(body, item);
 
                             break;
 
@@ -301,7 +304,7 @@ namespace ReleaseNotes.Controllers
                                 webHeadingAdded = true;
                             }
 
-                            body += AddItemToBody(body, item);
+                            body = AddItemToBody(body, item);
 
                             break;
 
@@ -312,7 +315,7 @@ namespace ReleaseNotes.Controllers
                                 weCareHeadingAdded = true;
                             }
 
-                            body += AddItemToBody(body, item);
+                            body = AddItemToBody(body, item);
 
                             break;
 
@@ -322,7 +325,7 @@ namespace ReleaseNotes.Controllers
                                 body += AddHeading("Project: Other");
                                 otherHeadingAdded = true;
                             }
-                            body += AddItemToBody(body, item);
+                            body = AddItemToBody(body, item);
 
                             break;
 #endregion
@@ -376,6 +379,7 @@ namespace ReleaseNotes.Controllers
             catch (Exception e)
             {
                 ModelState.AddModelError("Email", "An error occurred trying to open the email client.");
+
             }
 
             _objMail?.Close(Outlook.OlInspectorClose.olDiscard);

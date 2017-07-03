@@ -5,6 +5,7 @@ using ReleaseNotes.Models;
 using Outlook = Microsoft.Office.Interop.Outlook;
 using Service = ReleaseNotesBusinessLogic.Service;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Atlassian.Jira;
 using ReleaseNotesBusinessLogic;
 
@@ -370,12 +371,16 @@ namespace ReleaseNotes.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    System.Diagnostics.Process[] outlookProcess = System.Diagnostics.Process.GetProcessesByName("OUTLOOK");
 
-                    _objApp = new Outlook.Application();
+                    //Check if an existing outlook process already exsist, if so, use it.
+                    _objApp = outlookProcess.Length != 0
+                        ? Marshal.GetActiveObject("Outlook.Application") as Outlook.Application
+                        : new Outlook.Application();
 
                     _objMail = (Outlook.MailItem)_objApp.CreateItem(Outlook.OlItemType.olMailItem);
                     _objMail.To = "test@infotrack.com.au"; //Replace with InfotrackDevelopmentNotifications@infotrack.com.au from appSettings
-                    _objMail.Subject = "Release Notes - ";
+                    _objMail.Subject = "Release Notes - " ;
 
                     _objMail.HTMLBody = GetEmailBody(model);
                     _objMail.Display(true);
@@ -384,10 +389,8 @@ namespace ReleaseNotes.Controllers
             catch (Exception e)
             {
                 ModelState.AddModelError("Email", "An error occurred trying to open the email client.");
-
+                _objMail?.Close(Outlook.OlInspectorClose.olDiscard);
             }
-
-            _objMail?.Close(Outlook.OlInspectorClose.olDiscard);
 
             return View("Index", model);
         }

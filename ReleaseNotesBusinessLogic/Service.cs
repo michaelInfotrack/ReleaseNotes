@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Atlassian;
 using Atlassian.Jira;
+using Atlassian.Jira.Linq;
 using Newtonsoft.Json;
 
 namespace ReleaseNotesBusinessLogic
@@ -38,12 +39,19 @@ namespace ReleaseNotesBusinessLogic
             var label = string.IsNullOrEmpty(releaseLabel) ? _releaseLabelToday : releaseLabel;
             var jqlQuery = string.Format("labels = {0} ", label);
 
+            return ExecuteJqlQuery(jqlQuery);
+        }
+
+        public void GetPreviousReleases(string yearFilter = "2017")
+        {
+        }
+
+        private List<Issue> ExecuteJqlQuery(string jqlQuery)
+        {
+
             return _jira.Issues.GetIsssuesFromJqlAsync(jqlQuery, 100, 0, new System.Threading.CancellationToken()).Result.ToList();
         }
 
-        public object GetFormattedReleaseLabelFromDate()
-        {
-            throw new NotImplementedException();
-        }
+
     }
 }

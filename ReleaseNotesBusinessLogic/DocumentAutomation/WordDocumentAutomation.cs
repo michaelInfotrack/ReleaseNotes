@@ -20,8 +20,10 @@ namespace ReleaseNotesBusinessLogic
             // process the file
             using (WordDocument wordDocWrapper = new WordDocument(word, inputFilePath))
             {
-                wordDocWrapper.AddTagIssues(issues, DateTime.Today.ToLongDateString());
-                wordDocWrapper.SaveAs(inputFilePath, WdSaveFormat.wdFormatDocumentDefault);
+                if (wordDocWrapper.AddTagIssues(issues, DateTime.Today.AddDays(-1).ToLongDateString()))
+                {
+                    wordDocWrapper.SaveAs(inputFilePath, WdSaveFormat.wdFormatDocumentDefault);                    
+                }
                 wordDocWrapper.SaveAs(outputFilePath, WdSaveFormat.wdFormatPDF);
             }
         }

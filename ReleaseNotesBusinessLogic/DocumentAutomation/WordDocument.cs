@@ -43,10 +43,16 @@ namespace ReleaseNotesBusinessLogic
                 _wordDoc.Unprotect();
         }
 
-        public void AddTagIssues(List<Issue> list, string releaseDate)
+        public bool AddTagIssues(List<Issue> list, string releaseDate)
         {           
             if (list.Count > 0)
             {
+                foreach (var item in _wordDoc.Content.Text.Split('\n').ToList())
+                {
+                    if (item.Contains(releaseDate))
+                        return false;
+                }
+
                 _wordDoc.Paragraphs.Add(_wordDoc.Range(0, 0));
 
                 var pDate = _wordDoc.Paragraphs.Add(_wordDoc.Paragraphs[2].Range);
@@ -80,7 +86,11 @@ namespace ReleaseNotesBusinessLogic
                     table.Rows[list.IndexOf(item) + 1].Cells[2].Range.Text = item.Summary;                                     
                     table.Rows[list.IndexOf(item) + 1].Cells[3].Range.Text = item.Assignee;
                 }
+
+                return true;
             }
+
+            return false;
         }       
 
 

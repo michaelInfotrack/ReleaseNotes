@@ -47,7 +47,7 @@ namespace ReleaseNotesBusinessLogic
         {
             var automation = new WordDocumentAutomation();           
 
-            automation.AddToHistoryIssues(null, @"D:\Git\ReleaseNotes\ReleaseNotes.docx", @"D:\Git\ReleaseNotes\test.pdf", GetDailyReleaseIssues());
+            automation.AddToHistoryIssues(null, @"\\syd-schfile01-t\Images\ReleaseNotes\ReleaseNotes.docx",String.Format(@"\\syd-schfile01-t\Images\ReleaseNotes\ReleaseNotes_{0}.pdf", DateTime.Today.ToString("yyyy-MM-dd") ), GetDailyReleaseIssues());
 
         }
 

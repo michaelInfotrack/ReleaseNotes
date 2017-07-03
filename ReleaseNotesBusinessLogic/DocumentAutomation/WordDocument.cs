@@ -43,15 +43,25 @@ namespace ReleaseNotesBusinessLogic
                 _wordDoc.Unprotect();
         }
 
-        public void AddTagIssues(List<Issue> list, string releaseDate)
+        public bool AddTagIssues(List<Issue> list, string label, bool isLabelDate)
         {           
             if (list.Count > 0)
             {
+                if (isLabelDate)
+                {
+                    //Only do if that release date is not there.
+                    foreach (var item in _wordDoc.Content.Text.Split('\n').ToList())
+                    {
+                        if (item.Contains(label))
+                            return false;
+                    }
+                }
+
                 _wordDoc.Paragraphs.Add(_wordDoc.Range(0, 0));
 
                 var pDate = _wordDoc.Paragraphs.Add(_wordDoc.Paragraphs[2].Range);
                 pDate.Format.SpaceAfter = 10f;
-                pDate.Range.Text = String.Format(releaseDate);
+                pDate.Range.Text = isLabelDate ? String.Format(label) : String.Format("Issues for label: '{0}'", label);
                 pDate.Range.Font.Size = 14;
                 pDate.Range.Font.Name = "Arial";
 
@@ -80,7 +90,11 @@ namespace ReleaseNotesBusinessLogic
                     table.Rows[list.IndexOf(item) + 1].Cells[2].Range.Text = item.Summary;                                     
                     table.Rows[list.IndexOf(item) + 1].Cells[3].Range.Text = item.Assignee;
                 }
+
+                return true;
             }
+
+            return false;
         }       
 
 

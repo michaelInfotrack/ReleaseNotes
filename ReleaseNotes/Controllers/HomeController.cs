@@ -5,6 +5,7 @@ using ReleaseNotes.Models;
 using Outlook = Microsoft.Office.Interop.Outlook;
 using Service = ReleaseNotesBusinessLogic.Service;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace ReleaseNotes.Controllers
 {
@@ -20,7 +21,7 @@ namespace ReleaseNotes.Controllers
         public ActionResult Index()
         {
             var results = _service.GetDailyReleaseIssues();
-            var model = new ResultsModel { JiraIssues = results };
+            var model = new ResultsModel { JiraIssues = results.ToList() };
             return View(model);
         }
 
@@ -42,7 +43,7 @@ namespace ReleaseNotes.Controllers
         public ActionResult GetByDate(string releaseLabel)
         {
             var result = _service.GetDailyReleaseIssues(releaseLabel);
-            var model = new ResultsModel { JiraIssues = result };
+            var model = new ResultsModel { JiraIssues = result.ToList() };
 
             return View("Index", model);
         }
@@ -163,7 +164,7 @@ namespace ReleaseNotes.Controllers
         public ActionResult GenerateEmail()
         {
             var result = _service.GetDailyReleaseIssues();
-            var model = new ResultsModel { JiraIssues = result };
+            var model = new ResultsModel { JiraIssues = result.ToList() };
 
             Outlook.Application _objApp;
             Outlook.MailItem _objMail = null;
@@ -172,7 +173,9 @@ namespace ReleaseNotes.Controllers
             {
                 if (ModelState.IsValid)
                 {
+
                     _objApp = new Outlook.Application();
+
                     _objMail = (Outlook.MailItem)_objApp.CreateItem(Outlook.OlItemType.olMailItem);
                     _objMail.To = "test@infotrack.com.au"; //Replace with InfotrackDevelopmentNotifications@infotrack.com.au from appSettings
                     _objMail.Subject = "Release Notes - ";

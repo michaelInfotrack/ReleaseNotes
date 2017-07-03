@@ -27,29 +27,23 @@ namespace ReleaseNotesBusinessLogic
             return Jira.CreateRestClient(connectionPath, username, password);
         }
 
-
         private string GetDailyReleaseLabel()
         {
             return DateTime.Today.ToString("yyyMMdd");
         }
 
-
-        public List<Issue> GetDailyReleaseIssues(string releaseLabel = "")
+        public IEnumerable<Issue> GetDailyReleaseIssues(string releaseLabel = "")
         {
             var label = string.IsNullOrEmpty(releaseLabel) ? _releaseLabelToday : releaseLabel;
             var jqlQuery = string.Format("labels = {0} ", label);
 
-            return ExecuteJqlQuery(jqlQuery);
+            return ExecuteJqlQuery(jqlQuery).OrderBy(i => i.Key.ToString());
         }
 
-        public void GetPreviousReleases(string yearFilter = "2017")
-        {
-        }
-
-        private List<Issue> ExecuteJqlQuery(string jqlQuery)
+        private IEnumerable<Issue> ExecuteJqlQuery(string jqlQuery)
         {
 
-            return _jira.Issues.GetIsssuesFromJqlAsync(jqlQuery, 100, 0, new System.Threading.CancellationToken()).Result.ToList();
+            return _jira.Issues.GetIsssuesFromJqlAsync(jqlQuery, 100, 0, new System.Threading.CancellationToken()).Result.AsEnumerable();
         }
 
 

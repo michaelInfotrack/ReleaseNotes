@@ -3,6 +3,14 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ReleaseNotes.Models
 {
+    public class EmailFormModel
+    {
+        [Required, Display(Name = "Release Title")]
+        public string ReleaseTitle { get; set; }
+        [Required]
+        public string ReleaseNotes { get; set; }
+    }
+
     public class ExternalLoginConfirmationViewModel
     {
         [Required]

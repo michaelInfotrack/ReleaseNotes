@@ -1,17 +1,35 @@
-﻿@{
-    ViewBag.Title = "Contact";
+﻿@model ReleaseNotes.Models.EmailFormModel
+@{
+    ViewBag.Title = "Release Notes";
 }
 <h2>@ViewBag.Title.</h2>
-<h3>@ViewBag.Message</h3>
 
-<address>
-    One Microsoft Way<br />
-    Redmond, WA 98052-6399<br />
-    <abbr title="Phone">P:</abbr>
-    425.555.0100
-</address>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
 
-<address>
-    <strong>Support:</strong>   <a href="mailto:Support@example.com">Support@example.com</a><br />
-    <strong>Marketing:</strong> <a href="mailto:Marketing@example.com">Marketing@example.com</a>
-</address>
+    <hr />
+    <div class="form-group">
+        @Html.LabelFor(m => m.ReleaseTitle, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.ReleaseTitle, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.ReleaseTitle)
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.ReleaseNotes, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextAreaFor(m => m.ReleaseNotes, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.ReleaseNotes)
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" class="btn btn-default" value="Generate Release Notes" />
+        </div>
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

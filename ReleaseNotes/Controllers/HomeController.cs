@@ -2,6 +2,7 @@
 using System.Web.Mvc;
 using ReleaseNotes.Models;
 using Outlook = Microsoft.Office.Interop.Outlook;
+using ReleaseNotesBusinessLogic;
 
 namespace ReleaseNotes.Controllers
 {
@@ -9,7 +10,10 @@ namespace ReleaseNotes.Controllers
     {
         public ActionResult Index()
         {
-            return View();
+            var service = new Service();
+            var results = service.GetDailyReleaseIssues();
+            var model = new ResultsModel { JiraIssues = results };
+            return View(model);
         }
 
         public ActionResult About()

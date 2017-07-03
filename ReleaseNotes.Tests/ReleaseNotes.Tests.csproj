@@ -92,6 +92,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ReleaseNotesBusinessLogic\ReleaseNotesBusinessLogic.csproj">
+      <Project>{05abe411-b5d9-4c39-81c5-56bb634d8633}</Project>
+      <Name>ReleaseNotesBusinessLogic</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ReleaseNotes\ReleaseNotes.csproj">
       <Project>{C85A3457-1A3F-41F9-80B9-60B0A1BED426}</Project>
       <Name>ReleaseNotes</Name>

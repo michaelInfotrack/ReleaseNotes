@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReleaseNotes", "ReleaseNote
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReleaseNotes.Tests", "ReleaseNotes.Tests\ReleaseNotes.Tests.csproj", "{F41C8B91-4882-4E66-8530-789EE6E0F6C5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReleaseNotesBusinessLogic", "ReleaseNotesBusinessLogic\ReleaseNotesBusinessLogic.csproj", "{05ABE411-B5D9-4C39-81C5-56BB634D8633}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{F41C8B91-4882-4E66-8530-789EE6E0F6C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F41C8B91-4882-4E66-8530-789EE6E0F6C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F41C8B91-4882-4E66-8530-789EE6E0F6C5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{05ABE411-B5D9-4C39-81C5-56BB634D8633}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05ABE411-B5D9-4C39-81C5-56BB634D8633}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05ABE411-B5D9-4C39-81C5-56BB634D8633}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05ABE411-B5D9-4C39-81C5-56BB634D8633}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

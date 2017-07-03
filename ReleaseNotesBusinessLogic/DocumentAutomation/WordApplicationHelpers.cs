@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Pencil.Infrastructure.WordAutomation
+namespace ReleaseNotesBusinessLogic
 {
     public class WordApplicationHelpers
     {    

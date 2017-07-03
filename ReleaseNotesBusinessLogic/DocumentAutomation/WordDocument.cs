@@ -20,7 +20,7 @@ namespace ReleaseNotesBusinessLogic
         private string _inputFilePath;
         private string _inputFolderPath;
 
-        private static string tempfolderLocation = "";// ConfigurationManager.AppSettings.Get("WordTempLocation");
+        private static string tempfolderLocation;
         private static object oMissing = System.Reflection.Missing.Value;
 
 

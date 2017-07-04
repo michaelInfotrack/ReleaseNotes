@@ -67,6 +67,14 @@
             @Html.Hidden("releaseLabel", "")
             <input type="submit" value="Generate Email" class="btn btn-primary" />
         }
-
+        
+        @if (ViewBag.Message != null)
+        {
+            <script type="text/javascript">
+            window.onload = function () {
+                alert("@ViewBag.Message.ToString().Replace("'", "")");
+            };
+            </script>
+        }
 
     </div>

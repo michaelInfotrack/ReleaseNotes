@@ -28,7 +28,7 @@ namespace ReleaseNotesBusinessLogic
             return Jira.CreateRestClient(connectionPath, username, password);
         }
 
-        private string GetDailyReleaseLabel()
+        public string GetDailyReleaseLabel()
         {
             return DateTime.Today.ToString("yyyMMdd");
         }

@@ -359,7 +359,11 @@ namespace ReleaseNotes.Controllers
 
         [HttpPost]
         public ActionResult GenerateEmail(string releaseLabel)
-        {           
+        {
+            if (releaseLabel == string.Empty)
+            {
+                releaseLabel = _service.GetDailyReleaseLabel();
+            }
 
             var result = _service.GetDailyReleaseIssues(releaseLabel);
             var model = new ResultsModel { JiraIssues = result };
@@ -390,9 +394,9 @@ namespace ReleaseNotes.Controllers
                     _objMail = (Outlook.MailItem)_objApp.CreateItem(Outlook.OlItemType.olMailItem);
                     _objMail.To = "test@infotrack.com.au"; //Replace with InfotrackDevelopmentNotifications@infotrack.com.au from appSettings
                     _objMail.Attachments.Add(_service.CreateIssuesHistory(releaseLabel));
-                    _objMail.Subject = "Release Notes - " + dateString;
+                    _objMail.Subject = "Release Notes - ";
 
-                    _objMail.HTMLBody = GetEmailBody(model, dateString);
+                    _objMail.HTMLBody = GetEmailBody(model);
                     _objMail.Display(true);
                 }
             }

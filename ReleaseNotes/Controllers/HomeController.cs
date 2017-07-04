@@ -379,7 +379,7 @@ namespace ReleaseNotes.Controllers
 
                     _objMail = (Outlook.MailItem)_objApp.CreateItem(Outlook.OlItemType.olMailItem);
                     _objMail.To = "test@infotrack.com.au"; //Replace with InfotrackDevelopmentNotifications@infotrack.com.au from appSettings
-                    _objMail.Attachments.Add(_service.CreateIssuesHistory("viclove"));
+                    _objMail.Attachments.Add(_service.CreateIssuesHistory(releaseLabel));
                     _objMail.Subject = "Release Notes - ";
 
                     _objMail.HTMLBody = GetEmailBody(model);

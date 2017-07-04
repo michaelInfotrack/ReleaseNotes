@@ -31,17 +31,10 @@
         $(function(){
             $('.date-picker').datepicker(
                 {
-                    dateFormat: 'DD dd MM yy',
-                    altField: '#releaseLabel, #releaseLabelHidden',
+                    dateFormat: 'dd/mm/yy',
+                    altField: '#releaseLabel',
                     altFormat: 'yymmdd'
                 });          
-        })
-
-        $(function(){
-            $("#releaseLabelDate").on('change', function () {
-                $("#hiddenReleaseLabelDate").val(this.value);
-                //$("#releaseLabelHidden").val(this.value);
-            });
         })
     </script>
 </body>

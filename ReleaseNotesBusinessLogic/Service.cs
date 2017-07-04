@@ -71,7 +71,7 @@ namespace ReleaseNotesBusinessLogic
             return outputPath;
         }
 
-        private bool IsLabelDate(string label, out DateTime date)
+        public bool IsLabelDate(string label, out DateTime date)
         {
             return DateTime.TryParseExact(label,
                        "yyyyMMdd",

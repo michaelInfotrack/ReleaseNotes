@@ -50,14 +50,15 @@ namespace ReleaseNotes.Controllers
             return View("Index", model);
         }
 
-        private string GetEmailBody(ResultsModel model, string releaseLabelDate)
+        private string GetEmailBody(ResultsModel model, string releaseLabel)
         {
+
             try
             {
                 #region Variables
                 string body = string.Empty;
                 var newLine = "<br />";
-                body += "Releases for: " + releaseLabelDate + newLine + newLine; //This should probably be the releaseLabel
+                body += "Releases for: " + releaseLabel + newLine + newLine; //This should probably be the releaseLabel
 
                 bool dmtHeadingAdded = false;
                 bool globalHeadingAdded = false;
@@ -357,10 +358,10 @@ namespace ReleaseNotes.Controllers
         }
 
         [HttpPost]
-        public ActionResult GenerateEmail(string releaseLabelHidden, string hiddenReleaseLabelDate)
+        public ActionResult GenerateEmail(string releaseLabel)
         {           
 
-            var result = _service.GetDailyReleaseIssues(releaseLabelHidden);
+            var result = _service.GetDailyReleaseIssues(releaseLabel);
             var model = new ResultsModel { JiraIssues = result };
 
             Outlook.Application _objApp;
@@ -370,6 +371,15 @@ namespace ReleaseNotes.Controllers
             {
                 if (ModelState.IsValid)
                 {
+
+                    DateTime date;
+                    string dateString = releaseLabel;
+                    if (_service.IsLabelDate(releaseLabel, out date))
+                    {
+                        dateString = date.ToString("dd/MM/yyyy");
+                    }
+
+
                     System.Diagnostics.Process[] outlookProcess = System.Diagnostics.Process.GetProcessesByName("OUTLOOK");
 
                     //Check if an existing outlook process already exsist, if so, use it.
@@ -380,9 +390,9 @@ namespace ReleaseNotes.Controllers
                     _objMail = (Outlook.MailItem)_objApp.CreateItem(Outlook.OlItemType.olMailItem);
                     _objMail.To = "test@infotrack.com.au"; //Replace with InfotrackDevelopmentNotifications@infotrack.com.au from appSettings
                     _objMail.Attachments.Add(_service.CreateIssuesHistory(releaseLabel));
-                    _objMail.Subject = "Release Notes - ";
+                    _objMail.Subject = "Release Notes - " + dateString;
 
-                    _objMail.HTMLBody = GetEmailBody(model, hiddenReleaseLabelDate);
+                    _objMail.HTMLBody = GetEmailBody(model, dateString);
                     _objMail.Display(true);
                 }
             }

@@ -85,8 +85,7 @@
 
             @using (Html.BeginForm("GenerateEmail", "Home", FormMethod.Post))
             {
-            @Html.Hidden("releaseLabelHidden", "")
-            @Html.Hidden("hiddenReleaseLabelDate", "")
+            @Html.Hidden("releaseLabel", "")
                 <input type="submit" value="Generate Email" class="btn btn-primary" />
             }
 

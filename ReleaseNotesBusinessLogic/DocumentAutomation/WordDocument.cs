@@ -61,7 +61,7 @@ namespace ReleaseNotesBusinessLogic
 
                 var pDate = _wordDoc.Paragraphs.Add(_wordDoc.Paragraphs[2].Range);
                 pDate.Format.SpaceAfter = 10f;
-                pDate.Range.Text = isLabelDate ? String.Format(label) : String.Format("Issues for label: '{0}'", label);
+                pDate.Range.Text = isLabelDate ? String.Format(label) : String.Format("Tickets for Tag: '{0}'", label);
                 pDate.Range.Font.Size = 14;
                 pDate.Range.Font.Name = "Arial";
 

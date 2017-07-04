@@ -388,7 +388,7 @@ namespace ReleaseNotes.Controllers
             }
             catch (Exception e)
             {
-                ModelState.AddModelError("Email", "An error occurred trying to open the email client.");
+                ViewBag.Message = e.Message;
                 _objMail?.Close(Outlook.OlInspectorClose.olDiscard);
             }
 

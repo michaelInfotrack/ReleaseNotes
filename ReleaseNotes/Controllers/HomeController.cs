@@ -23,7 +23,7 @@ namespace ReleaseNotes.Controllers
         public ActionResult Index()
         {
             var results = _service.GetDailyReleaseIssues();
-            var model = new ResultsModel { JiraIssues = results };
+            var model = new ResultsModel { JiraIssues = results, DefaultReleaseLabel = _service.ReleaseLabelToday, SelectedDate = DateTime.Now.ToShortDateString() };
             return View(model);
         }
 
@@ -41,16 +41,16 @@ namespace ReleaseNotes.Controllers
             return View();
         }
 
-        [HttpGet]
-        public ActionResult GetByDate(string releaseLabel)
+        
+        public ActionResult GetByDate(string releaseLabel, string releaseLabelDate)
         {
             var result = _service.GetDailyReleaseIssues(releaseLabel);
-            var model = new ResultsModel { JiraIssues = result };
+            var model = new ResultsModel { JiraIssues = result, SelectedDate = releaseLabelDate, SelectedReleaseLabel = releaseLabel };
 
             return View("Index", model);
         }
 
-        private string GetEmailBody(ResultsModel model, string releaseLabel)
+        private string GetEmailBody(ResultsModel model, string releaseDate)
         {
 
             try
@@ -58,7 +58,8 @@ namespace ReleaseNotes.Controllers
                 #region Variables
                 string body = string.Empty;
                 var newLine = "<br />";
-                body += "Releases for: " + releaseLabel + newLine + newLine; //This should probably be the releaseLabel
+
+                body += "Releases for: " + releaseDate + newLine + newLine; //This should probably be the releaseLabel
 
                 bool dmtHeadingAdded = false;
                 bool globalHeadingAdded = false;
@@ -376,13 +377,8 @@ namespace ReleaseNotes.Controllers
                 if (ModelState.IsValid)
                 {
 
-                    DateTime date;
-                    string dateString = releaseLabel;
-                    if (_service.IsLabelDate(releaseLabel, out date))
-                    {
-                        dateString = date.ToString("dd/MM/yyyy");
-                    }
-
+                    DateTime releaseDate;
+                    var isLabelDate = _service.IsLabelDate(releaseLabel, out releaseDate);
 
                     System.Diagnostics.Process[] outlookProcess = System.Diagnostics.Process.GetProcessesByName("OUTLOOK");
 
@@ -394,9 +390,9 @@ namespace ReleaseNotes.Controllers
                     _objMail = (Outlook.MailItem)_objApp.CreateItem(Outlook.OlItemType.olMailItem);
                     _objMail.To = "test@infotrack.com.au"; //Replace with InfotrackDevelopmentNotifications@infotrack.com.au from appSettings
                     _objMail.Attachments.Add(_service.CreateIssuesHistory(releaseLabel));
-                    _objMail.Subject = "Release Notes - ";
+                    _objMail.Subject = "Release Notes - " + releaseDate.ToLongDateString();
 
-                    _objMail.HTMLBody = GetEmailBody(model);
+                    _objMail.HTMLBody = GetEmailBody(model, releaseDate.ToLongDateString());
                     _objMail.Display(true);
                 }
             }

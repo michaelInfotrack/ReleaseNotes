@@ -15,6 +15,7 @@ namespace ReleaseNotesBusinessLogic
     {
         private Jira _jira;
         private string _releaseLabelToday;
+        public string ReleaseLabelToday { get { return _releaseLabelToday; } }
 
         public Service()
         {

@@ -16,18 +16,17 @@
 <div class="row">
 
     <br />
-
     @using (Html.BeginForm("GetByDate", "Home", FormMethod.Get))
     {
         
         <div class="col-lg-3">
             @Html.Label("Release Date")
-            @Html.TextBox("releaseLabelDate", "", new { @class = "date-picker form-control" })
+            @Html.TextBox("releaseLabelDate", Model.SelectedDate, new { @class = "date-picker form-control" })
         </div>
 
         <div class="col-lg-2">
             @Html.Label("Release Label")
-            @Html.TextBox("releaseLabel", "", new { @class = "form-control" })            
+            @Html.TextBox("releaseLabel", (string.IsNullOrEmpty(Model.SelectedReleaseLabel) ? Model.DefaultReleaseLabel : Model.SelectedReleaseLabel), new { @class = "form-control" })            
         </div>
 
         <div class="col-lg-2" style="margin-top:4px;">
@@ -85,7 +84,7 @@
 
             @using (Html.BeginForm("GenerateEmail", "Home", FormMethod.Post))
             {
-            @Html.Hidden("releaseLabel", "")
+                @Html.Hidden("releaseLabel", "")
                 <input type="submit" value="Generate Email" class="btn btn-primary" />
             }
 

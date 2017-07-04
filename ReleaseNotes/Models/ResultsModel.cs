@@ -10,7 +10,9 @@ namespace ReleaseNotes.Models
     public class ResultsModel
     {
         public List<Issue> JiraIssues { get; set; }
-
+        public string SelectedDate { get; set; }
+        public string DefaultReleaseLabel { get; set; }
+        public string SelectedReleaseLabel { get; set; }
         public enum ProjectTypes
         {
             [Description("Development Management Team")]

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Web.Mvc;
 using System.Web.Services.Description;
 using ReleaseNotes.Models;
@@ -388,7 +389,7 @@ namespace ReleaseNotes.Controllers
                         : new Outlook.Application();
 
                     _objMail = (Outlook.MailItem)_objApp.CreateItem(Outlook.OlItemType.olMailItem);
-                    _objMail.To = "test@infotrack.com.au"; //Replace with InfotrackDevelopmentNotifications@infotrack.com.au from appSettings
+                    _objMail.To = ConfigurationManager.AppSettings["SendToEmail"];
                     _objMail.Attachments.Add(_service.CreateIssuesHistory(releaseLabel));
                     _objMail.Subject = "Release Notes - " + releaseDate.ToLongDateString();
 

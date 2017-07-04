@@ -28,7 +28,7 @@ namespace ReleaseNotesBusinessLogic
             return Jira.CreateRestClient(connectionPath, username, password);
         }
 
-        private string GetDailyReleaseLabel()
+        public string GetDailyReleaseLabel()
         {
             return DateTime.Today.ToString("yyyMMdd");
         }
@@ -71,7 +71,7 @@ namespace ReleaseNotesBusinessLogic
             return outputPath;
         }
 
-        private bool IsLabelDate(string label, out DateTime date)
+        public bool IsLabelDate(string label, out DateTime date)
         {
             return DateTime.TryParseExact(label,
                        "yyyyMMdd",

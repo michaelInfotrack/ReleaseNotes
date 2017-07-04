@@ -50,14 +50,17 @@ namespace ReleaseNotes.Controllers
             return View("Index", model);
         }
 
-        private string GetEmailBody(ResultsModel model)
+        private string GetEmailBody(ResultsModel model, string releaseLabel)
         {
             try
             {
                 #region Variables
                 string body = string.Empty;
                 var newLine = "<br />";
-                body += "Releases for: " + DateTime.Today.ToShortDateString() + newLine + newLine; //This should probably be the releaseLabel
+                DateTime releaseDate;
+                var isLabelDate = _service.IsLabelDate(releaseLabel, out releaseDate);
+
+                body += "Releases for: " + releaseDate.ToLongDateString() + newLine + newLine; //This should probably be the releaseLabel
 
                 bool dmtHeadingAdded = false;
                 bool globalHeadingAdded = false;
@@ -358,7 +361,11 @@ namespace ReleaseNotes.Controllers
 
         [HttpPost]
         public ActionResult GenerateEmail(string releaseLabel)
-        {           
+        {
+            if (releaseLabel == string.Empty)
+            {
+                releaseLabel = _service.GetDailyReleaseLabel();
+            }
 
             var result = _service.GetDailyReleaseIssues(releaseLabel);
             var model = new ResultsModel { JiraIssues = result };
@@ -380,9 +387,9 @@ namespace ReleaseNotes.Controllers
                     _objMail = (Outlook.MailItem)_objApp.CreateItem(Outlook.OlItemType.olMailItem);
                     _objMail.To = "test@infotrack.com.au"; //Replace with InfotrackDevelopmentNotifications@infotrack.com.au from appSettings
                     _objMail.Attachments.Add(_service.CreateIssuesHistory(releaseLabel));
-                    _objMail.Subject = "Release Notes - ";
+                    _objMail.Subject = "Release Notes";
 
-                    _objMail.HTMLBody = GetEmailBody(model);
+                    _objMail.HTMLBody = GetEmailBody(model, releaseLabel);
                     _objMail.Display(true);
                 }
             }

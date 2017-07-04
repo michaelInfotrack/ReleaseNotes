@@ -13,6 +13,44 @@
 
 </div>
 
+<div class="row">
+
+    <br />
+
+    @using (Html.BeginForm("GetByDate", "Home", FormMethod.Get))
+    {
+        
+        <div class="col-lg-3">
+            @Html.Label("Release Date")
+            @Html.TextBox("releaseLabelDate", "", new { @class = "date-picker form-control" })
+        </div>
+
+        <div class="col-lg-2">
+            @Html.Label("Release Label")
+            @Html.TextBox("releaseLabel", "", new { @class = "form-control" })            
+        </div>
+
+        <div class="col-lg-2" style="margin-top:4px;">
+            <br />
+            <input type="submit" value="Get Release" class="btn btn-primary" />
+        </div>
+        <br />
+        <br />
+        <br />
+        <br />
+    }
+</div>
+
+
+    @if (Model.JiraIssues.Count == 0)
+    {
+        <div class="col-lg-2">
+            No results found
+        </div>
+
+        <br />
+    }
+
 
     @foreach (var item in Model.JiraIssues.GroupBy(x => x.Project).ToList())
     {
@@ -22,16 +60,16 @@
                     <td colspan="4" style="text-align:center; color:white; font-weight:bold">@(Model.GetEnumDescription(item.FirstOrDefault().Project) ?? "Other")</td>
                 </tr>
                 <tr style="color:white; font-weight:bold; text-decoration:underline">
-                    <td>Jira Id</td>
+                    <td style="min-width:100px;">Jira Id</td>
                     <td>Assignee</td>
                     <td>Summary</td>
-                    <td>Status</td>
+                    <td style="min-width:150px;">Status</td>
                 </tr>
             </thead>
             @foreach (var issue in item)
             {
                 <tr>
-                    <td><a target="_blank" href="https://infotrack.atlassian.net/browse/@issue.Key">@issue.Key</a></td>
+                    <td style="width:auto"><a target="_blank" href="https://infotrack.atlassian.net/browse/@issue.Key">@issue.Key</a></td>
                     <td>@issue.Assignee</td>
                     <td>@issue.Summary</td>
                     <td>@issue.Status</td>
@@ -41,33 +79,26 @@
         <br />
     }
 
+    @if (Model.JiraIssues.Count > 0)
+    {
+        <div class="row" style="text-align:right; margin-right:2px">
 
-
-    <div class="row">
-
-        <br />
-    
-        @using (Html.BeginForm("GetByDate", "Home", FormMethod.Get))
-        {
-            <div>
-                @Html.Label("Release Date")
-                @Html.TextBox("releaseLabelDate", "", new { @class = "date-picker form-control" })
-            </div>
-
-            <div>
-                @Html.Label("Release Label")
-                @Html.TextBox("releaseLabel", "", new { @class = "form-control" })
-            </div>
-            <br />
-            <input type="submit" value="Get Release" class="btn btn-primary" />
-        }
-
-        @using (Html.BeginForm("GenerateEmail", "Home", FormMethod.Post))
-        {
+            @using (Html.BeginForm("GenerateEmail", "Home", FormMethod.Post))
+            {
             @Html.Hidden("releaseLabelHidden", "")
             @Html.Hidden("hiddenReleaseLabelDate", "")
-            <input type="submit" value="Generate Email" class="btn btn-primary" />
-        }
+                <input type="submit" value="Generate Email" class="btn btn-primary" />
+            }
 
+            @if (ViewBag.Message != null)
+            {
+                <script type="text/javascript">
+                    window.onload = function () {
+                        alert("@ViewBag.Message.ToString().Replace("'", "")");
+                    };
+                </script>
+            }
+        </div>
+    }
 
-    </div>
+    

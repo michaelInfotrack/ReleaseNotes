@@ -9,10 +9,10 @@ namespace ReleaseNotes.Tests
         [TestMethod]
         public void TestMethod1()
         {
-            var service = new Service();
+            //var service = new Service();
 
 
-            var results = service.GetDailyReleaseIssues("20170529");
+            //var results = service.GetDailyReleaseIssues("20170529");
 
         }
     }

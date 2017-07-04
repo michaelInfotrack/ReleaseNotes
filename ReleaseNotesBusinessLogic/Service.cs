@@ -8,6 +8,7 @@ using Atlassian.Jira;
 using Atlassian.Jira.Linq;
 using Newtonsoft.Json;
 using System.Globalization;
+using System.Configuration;
 
 namespace ReleaseNotesBusinessLogic
 {
@@ -17,10 +18,10 @@ namespace ReleaseNotesBusinessLogic
         private string _releaseLabelToday;
         public string ReleaseLabelToday { get { return _releaseLabelToday; } }
 
-        public Service()
+        public Service(string jiraPath, string username, string password)
         {
             // Pull crednetials from Config instead (later)
-            _jira = GetJiraConnection(@"https://infotrack.atlassian.net", "michael.lachlan@infotrack.com.au", "Password2");
+            _jira = GetJiraConnection(jiraPath, username, password);
             _releaseLabelToday = GetDailyReleaseLabel();
         }
 

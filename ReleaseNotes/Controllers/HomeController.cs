@@ -21,7 +21,10 @@ namespace ReleaseNotes.Controllers
 
         public HomeController()
         {
-            _service = new Service();
+            var jiraPath = ConfigurationManager.AppSettings["JiraPath"];
+            var userLogin = ConfigurationManager.AppSettings["JiraUserName"];
+            var userPassword = ConfigurationManager.AppSettings["JiraUserPassword"];
+            _service = new Service(jiraPath, userLogin, userPassword);
         }
 
         public ActionResult Index()
@@ -67,7 +70,7 @@ namespace ReleaseNotes.Controllers
                 return value.ToString();
         }
 
-        private string GetEmailBody(ResultsModel model, string releaseLabel)
+        private string GetEmailBody(ResultsModel model, string releaseDate)
         {
 
             try
@@ -77,7 +80,7 @@ namespace ReleaseNotes.Controllers
                 var newLine = "<br />";
 
                 body += @"<!DOCTYPE HTML PUBLIC "" -//W3C//DTD HTML 4.01 Transitional//EN""><html><head><title> LEAP Disbursements Invoice</title><meta http - equiv = ""Content-Type"" content = ""text/html; charset=iso-8859-1""></head><body>";
-                body += "Releases for: " + releaseDate.ToLongDateString() + newLine + newLine; //This should probably be the releaseLabel
+                body += "Releases for: " + releaseDate + newLine + newLine; //This should probably be the releaseLabel
 
                 #endregion
 

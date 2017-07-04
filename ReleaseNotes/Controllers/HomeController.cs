@@ -50,14 +50,14 @@ namespace ReleaseNotes.Controllers
             return View("Index", model);
         }
 
-        private string GetEmailBody(ResultsModel model)
+        private string GetEmailBody(ResultsModel model, string releaseLabelDate)
         {
             try
             {
                 #region Variables
                 string body = string.Empty;
                 var newLine = "<br />";
-                body += "Releases for: " + DateTime.Today.ToShortDateString() + newLine + newLine; //This should probably be the releaseLabel
+                body += "Releases for: " + releaseLabelDate + newLine + newLine; //This should probably be the releaseLabel
 
                 bool dmtHeadingAdded = false;
                 bool globalHeadingAdded = false;
@@ -357,10 +357,10 @@ namespace ReleaseNotes.Controllers
         }
 
         [HttpPost]
-        public ActionResult GenerateEmail(string releaseLabel)
+        public ActionResult GenerateEmail(string releaseLabelHidden, string hiddenReleaseLabelDate)
         {           
 
-            var result = _service.GetDailyReleaseIssues(releaseLabel);
+            var result = _service.GetDailyReleaseIssues(releaseLabelHidden);
             var model = new ResultsModel { JiraIssues = result };
 
             Outlook.Application _objApp;
@@ -382,7 +382,7 @@ namespace ReleaseNotes.Controllers
                     _objMail.Attachments.Add(_service.CreateIssuesHistory("viclove"));
                     _objMail.Subject = "Release Notes - ";
 
-                    _objMail.HTMLBody = GetEmailBody(model);
+                    _objMail.HTMLBody = GetEmailBody(model, hiddenReleaseLabelDate);
                     _objMail.Display(true);
                 }
             }

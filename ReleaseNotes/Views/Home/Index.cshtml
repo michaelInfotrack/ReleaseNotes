@@ -9,7 +9,7 @@
 
 <div class="jumbotron">
 
-    <h1>Releases</h1>
+    <h1 align="center">Releases</h1>
 
 </div>
 
@@ -19,9 +19,9 @@
         <table class="table table-striped table-hover">
             <thead>
                 <tr  style="background-color:black">
-                    <td colspan="4" style="text-align:center; color:white; font-weight:bold">@Model.GetEnumDescription(item.FirstOrDefault().Project)</td>
+                    <td colspan="4" style="text-align:center; color:white; font-weight:bold">@(Model.GetEnumDescription(item.FirstOrDefault().Project) ?? "Other")</td>
                 </tr>
-                <tr style="color:white; font-weight:bold">
+                <tr style="color:white; font-weight:bold; text-decoration:underline">
                     <td>Jira Id</td>
                     <td>Assignee</td>
                     <td>Summary</td>
@@ -64,7 +64,8 @@
 
         @using (Html.BeginForm("GenerateEmail", "Home", FormMethod.Post))
         {
-            @Html.Hidden("releaseLabel", "")
+            @Html.Hidden("releaseLabelHidden", "")
+            @Html.Hidden("hiddenReleaseLabelDate", "")
             <input type="submit" value="Generate Email" class="btn btn-primary" />
         }
 

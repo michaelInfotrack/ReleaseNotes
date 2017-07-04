@@ -80,7 +80,7 @@ namespace ReleaseNotes.Controllers
                 var newLine = "<br />";
 
                 body += @"<!DOCTYPE HTML PUBLIC "" -//W3C//DTD HTML 4.01 Transitional//EN""><html><head><title> LEAP Disbursements Invoice</title><meta http - equiv = ""Content-Type"" content = ""text/html; charset=iso-8859-1""></head><body>";
-                body += "Releases for: " + releaseDate + newLine + newLine; //This should probably be the releaseLabel
+                body += @"<font size=""5""> Releases for: " + releaseDate + newLine + newLine + "</font>"; //This should probably be the releaseLabel
 
                 #endregion
 
@@ -102,7 +102,7 @@ namespace ReleaseNotes.Controllers
                 } 
                 
 
-                return body;
+                return body + "</body></html>";
             }
             catch (Exception e)
             {

@@ -357,10 +357,10 @@ namespace ReleaseNotes.Controllers
         }
 
         [HttpPost]
-        public ActionResult GenerateEmail()
+        public ActionResult GenerateEmail(string releaseLabel)
         {           
 
-            var result = _service.GetDailyReleaseIssues();
+            var result = _service.GetDailyReleaseIssues(releaseLabel);
             var model = new ResultsModel { JiraIssues = result };
 
             Outlook.Application _objApp;

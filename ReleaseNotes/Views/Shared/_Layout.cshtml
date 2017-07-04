@@ -51,7 +51,9 @@
         $(function(){
             $('.date-picker').datepicker(
                 {
-                    dateFormat: 'yymmdd'
+                    dateFormat: 'DD dd MM yy',
+                    altField: '#releaseLabel',
+                    altFormat: 'yymmdd'
                 });
         })
     </script>

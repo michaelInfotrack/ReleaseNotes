@@ -49,14 +49,23 @@
     
         @using (Html.BeginForm("GetByDate", "Home", FormMethod.Get))
         {
-            @*@Html.TextBox("releaseLabel", null, new { @class = "form-control" });*@
-            @Html.TextBox("releaseLabel", "", new { @class = "date-picker" })
+            <div>
+                @Html.Label("Release Date")
+                @Html.TextBox("releaseLabelDate", "", new { @class = "date-picker form-control" })
+            </div>
+
+            <div>
+                @Html.Label("Release Label")
+                @Html.TextBox("releaseLabel", "", new { @class = "form-control" })
+            </div>
+            <br />
             <input type="submit" value="Get Release" class="btn btn-primary" />
         }
 
         @using (Html.BeginForm("GenerateEmail", "Home", FormMethod.Post))
         {
-            <input type="submit" value="Generate Email" class="form-control" />
+            @Html.Hidden("releaseLabel", "")
+            <input type="submit" value="Generate Email" class="btn btn-primary" />
         }
 
 

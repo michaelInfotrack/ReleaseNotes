@@ -35,10 +35,17 @@ namespace ReleaseNotesBusinessLogic
 
         public List<Issue> GetDailyReleaseIssues(string releaseLabel = "")
         {
-            var label = string.IsNullOrEmpty(releaseLabel) ? _releaseLabelToday : releaseLabel;
-            var jqlQuery = string.Format("labels = {0} ", label);
+            try
+            {
+                var label = string.IsNullOrEmpty(releaseLabel) ? _releaseLabelToday : releaseLabel;
+                var jqlQuery = string.Format("labels = {0} ", label);
 
-            return ExecuteJqlQuery(jqlQuery).OrderBy(i => i.Key.ToString()).ThenBy(i => i.Assignee.ToString()).ToList();
+                return ExecuteJqlQuery(jqlQuery).OrderBy(i => i.Key.ToString()).ToList();
+            }
+            catch(Exception)
+            {
+                return new List<Issue>();
+            }
         }
 
 

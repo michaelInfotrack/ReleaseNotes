@@ -17,9 +17,8 @@
 
     <br />
     @using (Html.BeginForm("GetByDate", "Home", FormMethod.Get))
-    {
-        
-        <div class="col-lg-3">
+    {        
+        <div class="col-lg-2">
             @Html.Label("Release Date")
             @Html.TextBox("releaseLabelDate", Model.SelectedDate, new { @class = "date-picker form-control" })
         </div>
@@ -33,11 +32,31 @@
             <br />
             <input type="submit" value="Get Release" class="btn btn-primary" />
         </div>
-        <br />
-        <br />
-        <br />
-        <br />
     }
+
+        <div class="col-lg-6" style="text-align:right;">
+
+            @using (Html.BeginForm("GenerateEmail", "Home", FormMethod.Post))
+            {
+                @Html.Hidden("isTodayRelease", "true")
+                <br />
+                <input type="submit" value="Send Today's Release" class="btn btn-primary" />
+            }
+
+            @if (ViewBag.Message != null)
+            {
+                <script type="text/javascript">
+                    window.onload = function () {
+                        alert("@ViewBag.Message.ToString().Replace("'", "")");
+                    };
+                </script>
+            }
+        </div>
+
+        <br />
+        <br />
+        <br />
+        <br />
 </div>
 
 
@@ -61,8 +80,8 @@
                 <tr style="color:white; font-weight:bold; text-decoration:underline">
                     <td style="width: 10%">Jira Id</td>
                     <td style="width: 20%">Assignee</td>
-                    <td style="width: 60%">Summary</td>
-                    <td style="width: 10%">Status</td>
+                    <td style="width: 55%">Summary</td>
+                    <td style="width: 15%">Status</td>
                 </tr>
             </thead>
             @foreach (var issue in item)

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using Microsoft.Office.Interop.Word;
 using Atlassian.Jira;
-
+using System.Globalization;
 
 namespace ReleaseNotesBusinessLogic
 {
@@ -43,20 +43,12 @@ namespace ReleaseNotesBusinessLogic
                 _wordDoc.Unprotect();
         }
 
-        public bool AddTagIssues(List<Issue> list, string label, bool isLabelDate)
-        {           
-            if (list.Count > 0)
-            {
-                if (isLabelDate)
-                {
-                    //Only do if that release date is not there.
-                    foreach (var item in _wordDoc.Content.Text.Split('\n').ToList())
-                    {
-                        if (item.Contains(label))
-                            return false;
-                    }
-                }
+        
 
+        public bool AddTagIssues(List<Issue> list, string label, bool isLabelDate)
+        {               
+             if (list.Count > 0)
+            {
                 _wordDoc.Paragraphs.Add(_wordDoc.Range(0, 0));
 
                 var pDate = _wordDoc.Paragraphs.Add(_wordDoc.Paragraphs[2].Range);

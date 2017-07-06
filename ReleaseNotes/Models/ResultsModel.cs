@@ -25,6 +25,8 @@ namespace ReleaseNotes.Models
             IMAJOR,
             [Description("Infotrack UK")]
             UK,
+            [Description("Development Support")]
+            DSUP,
             [Description("Internal")]
             IN,
             [Description("LABS")]

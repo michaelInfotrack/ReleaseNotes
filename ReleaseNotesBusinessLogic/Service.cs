@@ -44,10 +44,24 @@ namespace ReleaseNotesBusinessLogic
 
                 return ExecuteJqlQuery(jqlQuery).OrderBy(i => i.Key.ToString()).ToList();
             }
-            catch(Exception)
+            catch(Exception e)
             {
                 return new List<Issue>();
             }
+        }
+
+        public string CreateIssuesHistory(List<Tuple<string, List<Issue>>> listTuple)
+        {
+            var automation = new WordDocumentAutomation();
+
+            string outputPath, inputPath;
+
+            outputPath = String.Format(@"\\syd-schfile01-t\Images\ReleaseNotes\ReleaseNotes_{0}.pdf", DateTime.Today.ToString("yyyy-MM-dd"));
+            inputPath = @"\\syd-schfile01-t\Images\ReleaseNotes\ReleaseNotes.docx";
+
+            automation.AddToHistoryIssues(inputPath, outputPath, listTuple);
+
+            return outputPath;
         }
 
 
@@ -57,18 +71,16 @@ namespace ReleaseNotesBusinessLogic
             var doclabel = label;
             DateTime date;
             bool isLabelDate = IsLabelDate(label, out date);
+            string outputPath, inputPath;
 
-            string outputPath = String.Format(@"\\syd-schfile01-t\Images\ReleaseNotes\ReleaseNotes_{0}.pdf", DateTime.Today.ToString("yyyy-MM-dd"));
-            var inputPath = @"\\syd-schfile01-t\Images\ReleaseNotes\ReleaseNotes.docx";
+            outputPath = String.Format(@"\\syd-schfile01-t\Images\ReleaseNotes\ReleaseNotes_{0}.pdf", DateTime.Today.ToString("yyyy-MM-dd"));
+            inputPath = @"\\syd-schfile01-t\Images\ReleaseNotes\ReleaseNotes.docx";
+            doclabel = isLabelDate ? date.ToLongDateString() : label;
 
-            if (!isLabelDate)
-            {
-                outputPath = String.Format(@"\\syd-schfile01-t\Images\ReleaseNotes\ReleaseNotes_{0}_{1}.pdf", label, DateTime.Today.ToString("yyyy-MM-dd"));
-                inputPath = @"\\syd-schfile01-t\Images\ReleaseNotes\ReleaseNotes_empty.docx";
-            }
-            else doclabel = date.ToLongDateString();
+            var tuple = new List<Tuple<string, List<Issue>>>();
+            tuple.Add(new Tuple<string, List<Issue>>(doclabel, GetDailyReleaseIssues(label)));
 
-            automation.AddToHistoryIssues(inputPath, outputPath, GetDailyReleaseIssues(label), doclabel, isLabelDate);
+            automation.AddToHistoryIssues(inputPath, outputPath, tuple); 
 
             return outputPath;
         }

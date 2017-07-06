@@ -12,6 +12,7 @@ using ReleaseNotesBusinessLogic;
 using static ReleaseNotes.Models.ResultsModel;
 using System.Reflection;
 using System.ComponentModel;
+using System.Collections.Generic;
 
 namespace ReleaseNotes.Controllers
 {
@@ -79,7 +80,7 @@ namespace ReleaseNotes.Controllers
                 string body = string.Empty;
                 var newLine = "<br />";
 
-                body += @"<!DOCTYPE HTML PUBLIC "" -//W3C//DTD HTML 4.01 Transitional//EN""><html><head><title> LEAP Disbursements Invoice</title><meta http - equiv = ""Content-Type"" content = ""text/html; charset=iso-8859-1""></head><body>";
+                body += @"<!DOCTYPE HTML PUBLIC "" -//W3C//DTD HTML 4.01 Transitional//EN""><html><head><title> Release Notes</title><meta http - equiv = ""Content-Type"" content = ""text/html; charset=iso-8859-1""></head><body>";
                 body += @"<font size=""5""> Releases for: " + releaseDate + newLine + newLine + "</font>"; //This should probably be the releaseLabel
 
                 #endregion
@@ -118,17 +119,42 @@ namespace ReleaseNotes.Controllers
             return body;
         }
 
+        public List<Tuple<string, List<Issue>>> CreateTodaysRelease()
+        {
+            DateTime date = DateTime.Today;
+            DateTime aux;
+            string label;
+            List<Tuple<string, List<Issue>>> listTuple = new List<Tuple<string, List<Issue>>>();
+
+            for (int i = 7; i >= 0; i--)
+            {
+                aux = date.AddDays(-i);
+                label = aux.ToString("yyyMMdd");
+
+                var list = _service.GetDailyReleaseIssues(label);
+                if (list.Count > 0) listTuple.Add(new Tuple<string, List<Issue>>(aux.ToLongDateString(), list));
+            }
+
+            return listTuple;
+
+        }
+
+
 
         [HttpPost]
-        public ActionResult GenerateEmail(string releaseLabel)
+        public ActionResult GenerateEmail(string releaseLabel, bool isTodayRelease = false)
         {
-            if (releaseLabel == string.Empty)
+            if (releaseLabel == string.Empty || isTodayRelease)
             {
                 releaseLabel = _service.GetDailyReleaseLabel();
             }
 
-            var result = _service.GetDailyReleaseIssues(releaseLabel);
-            var model = new ResultsModel { JiraIssues = result };
+            var result = !isTodayRelease ? _service.GetDailyReleaseIssues(releaseLabel) : new List<Issue>();
+            var issuesList = isTodayRelease ? CreateTodaysRelease() : new List<Tuple<string, List<Issue>>>();
+
+            var model = !isTodayRelease ? new ResultsModel { JiraIssues = result } : new ResultsModel { JiraIssues = issuesList.Last().Item2 };
+
+            
 
             Outlook.Application _objApp;
             Outlook.MailItem _objMail = null;
@@ -150,10 +176,13 @@ namespace ReleaseNotes.Controllers
 
                     _objMail = (Outlook.MailItem)_objApp.CreateItem(Outlook.OlItemType.olMailItem);
                     _objMail.To = ConfigurationManager.AppSettings["SendToEmail"];
-                    _objMail.Attachments.Add(_service.CreateIssuesHistory(releaseLabel));
-                    _objMail.Subject = "Release Notes - " + releaseDate.ToLongDateString();
+                    if (isTodayRelease) _objMail.Attachments.Add(_service.CreateIssuesHistory(issuesList));
+                    else
+                        _objMail.Attachments.Add(_service.CreateIssuesHistory(releaseLabel));
+                    _objMail.Subject = isLabelDate ? "Release Notes - " + releaseDate.ToLongDateString() :
+                        "Release Notes for Label - " + releaseLabel;
 
-                    _objMail.HTMLBody = GetEmailBody(model, releaseDate.ToLongDateString());
+                    _objMail.HTMLBody = isLabelDate ? GetEmailBody(model, releaseDate.ToLongDateString()) : GetEmailBody(model, releaseLabel);
                     _objMail.Display(true);
                 }
             }
